@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+    HOUNI NHOT LES ACTUALITES<br>
+        <a class="btn btn-dark" href="{% url 'DocumentUpload' %}">Send Document</a><br><br>
+        <a class="btn btn-warning" href="{% url 'messagesInbox' %}">YOUR INBOX {% if numNotReadMsg %}<span class="badge badge-danger">{{ numNotReadMsg }} New Messages</span>{% endif %}</a><br><br>
+        <a class="btn btn-success" href="{% url 'messagesSent' %}">MESSAGES SENT</a><br><br>
+        <a class="btn btn-primary" href="{% url 'sendMessage' %}">SEND MESSAGE</a><br><br>
+{% endblock %}

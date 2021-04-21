@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="card text-center">
+  <div class="card-body">
+    <h1>-=- Organisations -=-</h1>
+    <p>This is our list of organisms</p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#Id</th>
+          <th scope="col">Name</th>
+          <th scope="col">Username</th>
+          <th scope="col">Email</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for org in categoryOrgs %}
+        <tr>
+          <th scope="row">{{org.id}}</th>
+          <td>    <a class="text-primary" href="{% url 'EntityInOrganism' org.id %}">{{org.name}}</a></td>
+          <td>{{org.username}}</td>
+          <td>{{org.email}}</td>
+        </tr>
+      {%endfor%}
+          </tbody>
+        </table>
+  </div>
+  </div>
+{% endblock %}
