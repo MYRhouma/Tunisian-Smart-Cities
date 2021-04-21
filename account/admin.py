@@ -1,5 +1,7 @@
 from django.contrib.auth.models import Group
-from .models import Category, Entity, Organisme, Application, Message, Article, Admin, Document
+from import_export import resources
+
+from .models import Category, Entity, Organisme, Application, Message, Article, Admin
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 
@@ -12,10 +14,16 @@ admin.site.register(Category)
 admin.site.register(Entity)
 
 
+class OrganismeRessources(resources.ModelResource):
+    class Meta:
+        model = Organisme
+        exclude = ('password', )
+
 class OrganismeAdmin(ImportExportModelAdmin,admin.ModelAdmin):
     fields = ('category','name', 'username','email','bio','is_superuser','is_staff')
     prepopulated_fields = {'username': ('name',)}
     list_filter = ['category','is_superuser','is_staff']
+    resource_class = OrganismeRessources
     class Meta:
         model=Organisme
 
@@ -48,7 +56,7 @@ admin.site.register(Article,ArticleAdmin)
 admin.site.register(Admin)
 
 
-class DocumentAdmin(admin.ModelAdmin):
-    model = Document
-    list_display = ('__str__', 'uploaded_at')
-admin.site.register(Document,DocumentAdmin)
+# class DocumentAdmin(admin.ModelAdmin):
+#     model = Document
+#     list_display = ('__str__', 'uploaded_at')
+# admin.site.register(Document,DocumentAdmin)

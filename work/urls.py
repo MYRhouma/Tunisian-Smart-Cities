@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
-from work import settings
+from django.conf import settings
+from . import views
 
 admin.site.site_header = 'ONEPACK ADMIN PANEL'
 
@@ -26,6 +27,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('account.urls')),
     path('', include('polls.urls')),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+handler403 = 'work.views.error403'
+handler404 = 'work.views.error404'
+handler500 = 'work.views.error500'

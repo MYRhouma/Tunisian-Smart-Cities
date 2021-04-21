@@ -57,6 +57,7 @@ class Organisme(AbstractUser):
     category=models.ForeignKey(Category,on_delete=models.DO_NOTHING,null=True)
     name=models.CharField(max_length=30,help_text='Fill name and username will get prefilled with no spaces.',null=True)
     email = models.EmailField(_('email address'), blank=False,help_text='You must fill this void to send the email with the random password.')
+    profile_pic = models.ImageField(default='profile_pic/default.jpg',upload_to='profile_pic/',null=True,blank=True)
     first_name = None
     last_name = None
     groups= None
@@ -83,7 +84,9 @@ class Entity(models.Model):
 class Message(models.Model):
      sender = models.ForeignKey(Organisme, related_name="sender",on_delete=models.CASCADE)
      reciever = models.ForeignKey(Organisme, related_name="receiver",on_delete=models.CASCADE)
+     object = models.CharField(null=True,max_length=255)
      msg_content = models.TextField(max_length=1200)
+     document = models.FileField(upload_to='documents/%Y/%m/%d/',blank=True,null=True)
      created_at = models.DateTimeField(auto_now_add=True)
      viewed = models.BooleanField(default=False)
      def __str__(self):
@@ -91,34 +94,34 @@ class Message(models.Model):
 
         
 
-class Document(models.Model):
-    sender = models.ForeignKey(Organisme,on_delete=models.DO_NOTHING,null=True)
-    note = models.TextField(max_length=2053,null=True)
-    document = models.FileField(upload_to='documents/%Y/%m/%d/')
-    uploaded_at = models.DateTimeField(auto_now_add=True)
-    def __str__(self):
-        return self.sender.username
+# class Document(models.Model):
+#     sender = models.ForeignKey(Organisme,on_delete=models.DO_NOTHING,null=True)
+#     note = models.TextField(max_length=2053,null=True)
+#     document = models.FileField(upload_to='documents/%Y/%m/%d/')
+#     uploaded_at = models.DateTimeField(auto_now_add=True)
+#     def __str__(self):
+#         return self.sender.username
 
-# @receiver(pre_save, sender=Organisme)
-# def my_callback(sender, instance, *args, **kwargs):
-#     count=len(Organisme.objects.filter(username=instance.username))
-#     print('count org',count)
-#     if instance.username and instance.email and not instance.is_superuser and count==0:
-#         random_password = get_random_string(length=8)
-#         instance.set_password(random_password)
-#
-#         email_body = f"Hello '{instance.name}' your login informations,\nusername: {instance.username} \npassword : {random_password}\n"
-#         recips = [instance.email,]
-#         print(recips)
-#         send_mail(
-#             f"{instance.email} welcome",
-#             email_body,
-#             "mylord5518@gmail.com",
-#             recips,
-#             fail_silently=False,
-#         )
-#         print(random_password)
-#         print(instance.password)
+@receiver(pre_save, sender=Organisme)
+def my_callback(sender, instance, *args, **kwargs):
+    count=len(Organisme.objects.filter(username=instance.username))
+    print('count org',count)
+    if instance.username and instance.email and not instance.is_superuser and count==0:
+        random_password = get_random_string(length=8)
+        instance.set_password(random_password)
+
+        email_body = f"Hello '{instance.name}' your login informations,\nusername: {instance.username} \npassword : {random_password}\n"
+        recips = [instance.email,]
+        print(recips)
+        send_mail(
+            f"{instance.email} welcome",
+            email_body,
+            "mylord5518@gmail.com",
+            recips,
+            fail_silently=False,
+        )
+        print(random_password)
+        print(instance.password)
 
 @receiver(post_save, sender=Organisme)
 def admin_creation(sender, instance, *args, **kwargs):
