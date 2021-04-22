@@ -39,6 +39,14 @@
                         </li>
 
                         {% endfor %}
+
+
+                        <li class="sidebar-item {% if sendmsg %}active{% endif %} ">
+                            <a href="{% url 'sendMessage' %}" class="sidebar-link">
+                                <i class="fas fa-comment-dots" aria-hidden="true"></i>
+                                <span>Contacter des membres</span>
+                            </a>
+                        </li>
                     </ul>
                 {% else %}
                     <ul class="menu">
@@ -165,6 +173,7 @@
                             </div>
                         </div>
                     </div>
+                    {% if DASHBOARD or ORGANISATION or ENTITY %}
                     <section class="section">
                         <div class="card">
                             <div class="card-header">
@@ -198,7 +207,8 @@
                             {% endfor %}
                             </div>
                         </section>
-                {% if ORGANISATION %}
+                    {%endif%}
+                        {% if ORGANISATION %}
                             <div class="col-12 col-xl-12" id="organisation">
                                 <div class="card">
                                     <div class="card-header">
@@ -232,6 +242,47 @@
                                     </div>
                                 </div>
                             </div>
+                    {% elif sendmsg %}
+                                <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title"><i class="fas fa-comment-dots" aria-hidden="true"></i> Contacter Tunisian Smart Cities</h4>
+                                </div>
+                                <div class="card-content"><grammarly-extension data-grammarly-shadow-root="true" style="position: absolute; top: 0px; left: 0px; pointer-events: none;" class="cGcvT"></grammarly-extension>
+                                    <div class="card-body">
+                                        <form class="form" method="POST">
+                                            <div class="row">
+
+                                                {% csrf_token %}
+                                                <div class="col-md-12 col-12">
+                                                    <div class="form-group">
+                                                    <label for="country-floating">Destinataire :</label>
+                                                        {{ form.reciever }}
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="country-floating">Objet</label>
+                                                        <input type="text" id="country-floating" class="form-control" name="object" id="id_object" placeholder="Objet du contact" required="">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 col-12">
+                                                    <div class="form-group">
+                                                        <label for="company-column">Message</label>
+                                                        <textarea type="text" id="company-column" class="form-control" rows="5" name="msg_content" id="id_msg_content" placeholder="Votre message" required="" spellcheck="false"></textarea>
+                                                    </div>
+                                                    <input class="form-control" type="file" name="document" id="id_document">
+                                                </div>
+
+
+                                                <div class="col-12 d-flex justify-content-end">
+                                                    <button type="submit" name="send" class="btn btn-primary me-1 mb-1">Envoyer</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 {#                    {% elif EDITPROFILE %}#}
 {#                                <div class="col-12">#}
 {#                            <div class="card">#}
@@ -464,7 +515,7 @@
                         </div>
                         <div class="float-end">
                             <p>Developed
-                                by <a href="https://onepack.tech" target="_blank">OnePack</a></p>
+                                by <a href="https://twitter.com/rapidouye" target="_blank">Mohamed Yassine Rhouma</a></p>
                         </div>
                     </div>
                 </footer>
