@@ -10,7 +10,7 @@
 {% endif %}
 
 <form action="{% url 'polls:vote' question.id %}" method="post">
-	{% csrf_token %} 
+	{% csrf_token %}
 	{% for choice in question.choice_set.all %}
 		<div class="form-check">
 			<input

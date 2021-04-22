@@ -1,5 +1,5 @@
 from django import forms
-from account.models import Message, Organisme, Application
+from account.models import Message, Organisme, Application, Entity
 
 
 # class DocumentForm(forms.ModelForm):
@@ -33,3 +33,9 @@ class ApplicationForm(forms.ModelForm):
         model = Application
         fields = ('category', 'name', 'username', 'email', 'bio', 'message')
         exclude = ('accepted',)
+
+class EntityForm(forms.ModelForm):
+    class Meta:
+        model = Entity
+        fields = ('organisme', 'full_name', 'function', 'email', 'phone')
+        exclude = ('organisme',)
