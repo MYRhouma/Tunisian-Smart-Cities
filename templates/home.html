@@ -6,38 +6,16 @@
   <div class="card-body">
     <h1>-=- Welcome -=-</h1>
     <p>This is our website</p>
-{% if user.is_staff %}
-    <a class="btn btn-dark" href="{% url 'CategoryList' %}">List of categories</a><br><br>
-{% endif %}
 {% if user.is_authenticated %}
-    <a class="btn btn-dark" href="{% url 'polls:index' %}">List of polls</a><br><br>
+    <a class="btn btn-dark" href="{% url 'logout' %}">Logout</a><br><br>
+
 {% else %}
+<a class="btn btn-dark" href="{% url 'login' %}">Login</a><br><br>
+
       <h1>-=- Application Form -=-</h1>
       <form method="post">
           {%  csrf_token %}
           {{ form|crispy }} <button type="submit" class="btn btn-primary">Submit</button>
-          <script>
-
-            var name=document.getElementById('id_name');
-            name.addEventListener('input',FillUsername());
-            function FillUsername() {
-          {#Code js jebtou men github hedha bech nslugi chaine "https://gist.github.com/codeguy/6684588#gistcomment-3426313"#}
-            String.prototype.slugify = function (separator = "-") {
-            return this
-            .toString()
-            .normalize('NFD')                   // split an accented letter in the base letter and the acent
-            .replace(/[\u0300-\u036f]/g, '')   // remove all previously split accents
-            .toLowerCase()
-            .trim()
-            .replace(/[^a-z0-9 ]/g, '')   // remove all chars not letters, numbers and spaces (to be replaced)
-            .replace(/\s+/g, separator);
-            };
-            {#ekher Slugify#}
-            username = name.value.slugify("_");
-            document.getElementById('id_username').value = username;
-            };
-
-          </script>
      </form>
   {% endif %}
   </div>
