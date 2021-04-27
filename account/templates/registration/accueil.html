@@ -1,0 +1,187 @@
+{% extends 'registration/base-dashboard.html' %}
+{% load static %}
+{%block title%} Profile {%endblock%}
+{%block content%}
+
+
+
+
+
+{% if user.is_staff or user.is_superuser %}
+            {% if DASHBOARD or ORGANISATION or ENTITY %}
+            <section class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Nos types d'organismes</h4>
+                    </div>
+                    <div class="card-body">
+
+                <div class="row">
+                {% for cat,count in categories.items %}
+
+                    <div class="col-6 col-lg-3 col-md-6">
+                        <div class="card">
+                            <div class="card-body px-3 py-4-5">
+                            <a href="{% url 'OrganisationsInCategory' cat.id %}#organisation">
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="stats-icon purple">
+                                            <i class="fas fa-address-card"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h6 class="text-muted font-semibold">{{ cat.name }}</h6>
+                                        <h6 class="font-extrabold mb-0">{{ count }}</h6>
+                                    </div>
+                                </div>
+                            </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    </div>
+                </section>
+            {%endif%}
+                {% if ORGANISATION %}
+                    <div class="col-12 col-xl-12" id="organisation">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Organismes</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-lg">
+                                        <thead>
+                                            <tr>
+                                                <th>Nom de lorganisme</th>
+                                                <th>Nom dutilisateur</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for org in categoryOrgs %}
+                                            <tr>
+                                                <td class="col-3">
+                                                    <div class="d-flex align-items-center">
+                                                        <p class="font-bold ms-3 mb-0"><a class="text-primary" href="{% url 'EntityInOrganism' org.id %}#entity">{{org.name}}</a></p>
+                                                    </div>
+                                                </td>
+                                                <td class="col-auto">
+                                                    <p class=" mb-0">{{org.username}}</p>
+                                                </td>
+                                            </tr>
+                                        {%endfor%}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        {% elif ENTITY %}
+            <div class="col-12 col-xl-12" id="entity">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Entités</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-lg">
+                                        <thead>
+                                            <tr>
+                                              <th>Nom</th>
+                                              <th>Fonction</th>
+                                              <th>Email</th>
+                                              <th>Téléphone</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for Entity in OrganismEntity %}
+                                            <tr>
+                                                <td class="col-auto">
+                                                    <p class=" mb-0">{{Entity.full_name}}</p>
+                                                </td>
+                                                <td class="col-auto">
+                                                    <p class=" mb-0">{{Entity.function}}</p>
+                                                </td>
+                                                <td class="col-auto">
+                                                    <p class=" mb-0">{{Entity.email}}</p>
+                                                </td>
+                                                <td class="col-auto">
+                                                    <p class=" mb-0">{{Entity.phone}}</p>
+                                                </td>
+                                            </tr>
+                                        {%endfor%}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        {% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{%else%}
+<div class="col-12 col-xl-12">
+    <div class="card">
+        <div class="card-header">
+            <h4>Actualités Récentes</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+
+                <table class="table table-hover table-lg">
+                    <tbody>
+                        <tr>
+                            <td class="col-3">
+                                <div class="d-flex align-items-center">
+
+                                    <div class="avatar avatar-md">
+                                        <img src="{% static 'assets/images/faces/2.jpg' %}">
+                                    </div>
+                                    <p class="font-bold ms-3 mb-0">Candidature Acceptée</p>
+                                </div>
+                            </td>
+                            <td class="col-auto">
+                                <p class=" mb-0">Félicitations ! Vous êtes choisis d'être parmi l'écosystème Tunisian Smart Cities.</p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="col-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar avatar-md">
+                                        <img src="{% static 'assets/images/faces/5.jpg' %}">
+                                    </div>
+                                    <p class="font-bold ms-3 mb-0">Postuler à l'appel à candidature</p>
+                                </div>
+                            </td>
+                            <td class="col-auto">
+                                <p class=" mb-0">Merci d'avoir postuler, vous serrez contacter dans les plus brefs délais.</p>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{%endif%}
+{%endblock%}

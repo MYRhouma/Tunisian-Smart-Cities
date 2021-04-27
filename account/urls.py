@@ -1,7 +1,7 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path, include
 from .views import OrganisationsInCategory, EntityInOrganism, messagesInbox, messagesSent, \
-    dashboard, home, SendMessage, CategoryList, EditProfile
+    dashboard, home, SendMessage, CategoryList, EditProfile, AddEntity
 
 urlpatterns = [
     path('category/', CategoryList, name='CategoryList'),
@@ -15,5 +15,6 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('edit/', EditProfile, name='editprofile'),
     path('dashboard/', dashboard, name="dashboard"),
+    path('addentity/', AddEntity, name="AddEntity"),
     path('',home, name='home'),
 ]

@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import UpdateView
 
-from account.forms import MessageForm, ApplicationForm,UpdateProfile
+from account.forms import MessageForm, ApplicationForm, UpdateProfile, EntityForm
 from account.models import Message, Organisme, Category, Entity, Application
 
 
@@ -45,7 +45,7 @@ def dashboard(request):
         DATA[cat]=Organisme.objects.filter(category=cat).count()
     print(messagetMetakrawech)
     context={'DASHBOARD':DASHBOARD,'numNotReadMsg':messagetMetakrawech,'messaget':messaget,'onlineUser':getuser,'categories':DATA}
-    return render(request,'registration/dashboard.html',context)
+    return render(request,'registration/accueil.html',context)
 
 @login_required()
 def CategoryList(request):
@@ -75,7 +75,7 @@ def OrganisationsInCategory(request,cat):
     print(cat)
     context = {'numNotReadMsg': messagetMetakrawech, 'messaget': messaget, 'onlineUser': onlineUser, 'categories': DATA,
                'ORGANISATION': ORGANISATION,'cat':cat,'categoryOrgs':categoryOrgs,}
-    return render(request, 'registration/dashboard.html', context)
+    return render(request, 'registration/accueil.html', context)
 
 @login_required()
 def EntityInOrganism(request,org):
@@ -97,52 +97,104 @@ def EntityInOrganism(request,org):
     OrganismEntity = Entity.objects.filter(organisme=org)
     context = {'ENTITY':ENTITY,'org': org, 'OrganismEntity': OrganismEntity,'numNotReadMsg': messagetMetakrawech, 'messaget': messaget, 'onlineUser': onlineUser, 'categories': DATA,
             }
-    return render(request, 'registration/dashboard.html', context)
+    return render(request, 'registration/accueil.html', context)
 
 
 @login_required()
 def messagesInbox(request):
+    onlineUser = request.user
+    messaget = Message.objects.filter(reciever=onlineUser, viewed=False)[:3]
+    messagetMetakrawech = messaget.count()
+    DATA = dict()
+    organismes = Organisme.objects.all()
+    categories = list(org.category for org in organismes)
+    unique_list = []
+    for x in categories:
+        if x not in unique_list:
+            unique_list.append(x)
+    for i in range(len(unique_list)):
+        cat = unique_list[i]
+        DATA[cat] = Organisme.objects.filter(category=cat).count()
     msgList=Message.objects.filter(reciever = request.user)
     print(msgList)
     for msg in msgList:
         if not msg.viewed:
             msg.viewed = True
             msg.save()
-    context={'msgList':msgList}
-    return render(request,'message/inbox.html',context)
+    context={'msgList':msgList,'inbox':True,'numNotReadMsg': messagetMetakrawech, 'messaget': messaget, 'onlineUser': onlineUser, 'categories': DATA,}
+    return render(request,'registration/inbox.html',context)
 
 
 @login_required()
 def messagesSent(request):
+    onlineUser = request.user
+    messaget = Message.objects.filter(reciever=onlineUser, viewed=False)[:3]
+    messagetMetakrawech = messaget.count()
+    DATA = dict()
+    organismes = Organisme.objects.all()
+    categories = list(org.category for org in organismes)
+    unique_list = []
+    for x in categories:
+        if x not in unique_list:
+            unique_list.append(x)
+    for i in range(len(unique_list)):
+        cat = unique_list[i]
+        DATA[cat] = Organisme.objects.filter(category=cat).count()
     msgList=Message.objects.filter(sender = request.user)
-    context={'msgList':msgList}
-    return render(request,'message/sentbox.html',context)
+    context={'msgList':msgList,'sent':True,'numNotReadMsg': messagetMetakrawech, 'messaget': messaget, 'onlineUser': onlineUser, 'categories': DATA,}
+    return render(request,'registration/sent.html',context)
 
 @login_required()
 def SendMessage(request):
+    DATA = dict()
+    organismes = Organisme.objects.all()
+    categories = list(org.category for org in organismes)
+    unique_list = []
+    for x in categories:
+        if x not in unique_list:
+            unique_list.append(x)
+    for i in range(len(unique_list)):
+        cat = unique_list[i]
+        DATA[cat] = Organisme.objects.filter(category=cat).count()
     sendmsg=True
     onlineUser = request.user
     getuser = Organisme.objects.filter(username=onlineUser.username).first()
     messaget = Message.objects.filter(reciever=onlineUser, viewed=False)[:3]
     messagetMetakrawech = messaget.count()
-    user = request.user
     if request.method == 'POST':
         form = MessageForm(request.POST)
         if form.is_valid():
             form = form.save(commit=False)
-            form.sender = user
+            form.sender = onlineUser
             form.save()
             return redirect('messagesSent')
     else:
         form = MessageForm()
-        if not user.is_staff:
+        if not onlineUser.is_staff:
             form.fields["reciever"].queryset = Organisme.objects.filter(is_staff=True)
         else:
             form.fields["reciever"].queryset = Organisme.objects.all()
-    context = {'form': form,'sendmsg':sendmsg,'onlineUser':getuser,'messagetMetakrawech':messagetMetakrawech}
-    return render(request, 'registration/dashboard.html', context)
+    context = {'form': form,'sendmsg':sendmsg,'onlineUser':getuser,'messagetMetakrawech':messagetMetakrawech, 'categories': DATA,}
+    return render(request, 'registration/message.html', context)
 
-
+@login_required()
+def AddEntity(request):
+    AddEntity=True
+    onlineUser = request.user
+    getuser = Organisme.objects.filter(username=onlineUser.username).first()
+    messaget = Message.objects.filter(reciever=onlineUser, viewed=False)[:3]
+    messagetMetakrawech = messaget.count()
+    if request.method == 'POST':
+        form = EntityForm(request.POST)
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.organisme = onlineUser
+            form.save()
+            return redirect('dashboard')
+    else:
+        form = EntityForm()
+    context = {'form': form,'AddEntity':AddEntity,'onlineUser':getuser,'messagetMetakrawech':messagetMetakrawech}
+    return render(request, 'registration/entite.html', context)
             
 # class EditProfile(UpdateView):
 #     model = Organisme
@@ -173,7 +225,7 @@ def EditProfile(request):
         'form_p': form,'EDITPROFILE':EDITPROFILE,'onlineUser':getuser,'messagetMetakrawech':messagetMetakrawech
     }
 
-    return render(request, 'registration/dashboard.html', context)
+    return render(request, 'registration/profile.html', context)
 
 
 

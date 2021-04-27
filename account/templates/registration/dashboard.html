@@ -66,7 +66,12 @@
                                 <span>Mon Profile</span>
                             </a>
                         </li>
-
+                        <li class="sidebar-item {% if AddEntity %}active{% endif %} ">
+                            <a href="{% url 'AddEntity' %}" class="sidebar-link">
+                                <i class="fas fa-id-card" aria-hidden="true"></i>
+                                <span>Ajouter une entité</span>
+                            </a>
+                        </li>
 
 
                         <li class="sidebar-item {% if sendmsg %}active{% endif %} ">
@@ -439,7 +444,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="basicInput">E-mail :</label>
-                                                    <input type="text" class="form-control" id="id_email" value="{{ request.user.email }}" name="email" placeholder="E-mail">
+                                                    <input type="email" class="form-control" id="id_email" value="{{ request.user.email }}" name="email" placeholder="E-mail">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="basicInput">Bio :</label>
@@ -454,7 +459,42 @@
                                 </div>
                             </div>
                         </div>
+                            {% elif AddEntity %}
+                                <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title"><i class="fas fa-id-card" aria-hidden="true"></i> Ajouter des Membres</h4>
+                                </div>
+                                <div class="card-content">
+                                    <div class="card-body">
 
+
+                                        <form class="form" method="POST">
+                                            <table>
+                                                <div class="form-group">
+                                                    <label for="basicInput">Nom complet :</label>
+                                                    <input type="text" class="form-control" id="id_full_name" name="full_name" placeholder="Nom complet">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="basicInput">Fonction :</label>
+                                                    <input type="text" class="form-control" id="id_function" name="function" placeholder="Fonction">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="basicInput">E-mail :</label>
+                                                <input type="email" class="form-control" id="id_email" name="email">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="basicInput">Phone :</label>
+                                                <input type="number" class="form-control" id="id_phone" name="phone">
+                                                </div>
+                                                <button type="submit" class="btn btn-primary float-end">Ajouter</button>
+                                                {% csrf_token %}
+                                            </table>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                             {% else %}
                             <div class="col-12 col-xl-12">
                                 <div class="card">

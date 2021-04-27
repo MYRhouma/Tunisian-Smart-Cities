@@ -1,6 +1,6 @@
-{% extends 'base.html' %}
-{% block content %}
-
+{% extends 'registration/base-dashboard.html' %}
+{%block title%} Profile {%endblock%}
+{%block content%}
 {% for message in msgList %}
 
 <div class="card">
@@ -16,5 +16,4 @@
 <br>
 
 {% endfor %}
-
-{% endblock %}
+{%endblock%}

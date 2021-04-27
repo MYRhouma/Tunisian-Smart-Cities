@@ -1,0 +1,40 @@
+{% extends 'registration/base-dashboard.html' %}
+{%block title%} Profile {%endblock%}
+{%block content%}
+    {% if user.is_staff or user.is_superuser %}
+        you are an administrator you can't edit your profile
+    {% else %}
+<div class="col-12">
+<div class="card">
+<div class="card-header">
+    <h4 class="card-title"><i class="fas fa-id-card" aria-hidden="true"></i> Modifier mes informations</h4>
+</div>
+<div class="card-content">
+    <div class="card-body">
+
+
+        <form class="form" method="POST">
+            <table>
+                <div class="form-group">
+                    <label for="basicInput">Nom :</label>
+                    <input type="text" class="form-control" id="id_name" value="{{ request.user.name }}" name="name" placeholder="Nom">
+                </div>
+                <div class="form-group">
+                    <label for="basicInput">E-mail :</label>
+                    <input type="email" class="form-control" id="id_email" value="{{ request.user.email }}" name="email" placeholder="E-mail">
+                </div>
+                <div class="form-group">
+                    <label for="basicInput">Bio :</label>
+                <textarea class="form-control" id="id_bio" name="bio" value="{{ request.user.bio }}" rows="4"></textarea>
+                </div>
+                {{ form_p.profile_pic }}<br>
+                <button type="submit" class="btn btn-primary float-end">Mettre à jour</button>
+                {% csrf_token %}
+            </table>
+        </form>
+    </div>
+</div>
+</div>
+</div>
+    {% endif %}
+{%endblock%}
